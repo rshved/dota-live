@@ -6,31 +6,41 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     gamesInfo: null,
-    matchInfo: null
+    matchInfo: null,
+    liveMatches: null
   },
 
   getters: {
     gamesInfo: state => state.gamesInfo,
-    matchInfo: state => state.matchInfo
+    matchInfo: state => state.matchInfo,
+    liveMatches: state => state.liveMatches
   },
 
   mutations: {
-    getGamesI(state, payload) {
+    setGamesInfo(state, payload) {
       state.gamesInfo = payload
     },
-    getMatchI(state, payload) {
+    setMatchInfo(state, payload) {
       state.matchInfo = payload
+    },
+    setLiveMatches(state, payload) {
+      state.liveMatches = payload
     }
   },
 
   actions: {
     async getGamesInfo({commit}) {
       const resp = await (await fetch('https://api.opendota.com/api/proMatches')).json()
-      commit('getGamesI', resp)
+      commit('setGamesInfo', resp)
     },
     async getMatchInfo({commit}, id) {
       const resp = await (await fetch(`https://api.opendota.com/api/matches/${id}`)).json()
-      commit('getMatchI', resp)
+      commit('setMatchInfo', resp)
+    },
+    async getLiveMatches({commit}) {
+      const resp = await (await fetch(`https://api.opendota.com/api/live`)).json()
+      console.log(resp);
+      commit('setLiveMatches', resp)
     }
   }
 })
